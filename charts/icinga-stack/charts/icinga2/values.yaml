@@ -35,6 +35,8 @@ config:
     credSecret: # Or use existing secret
     secretKey:
   disable_confd: true
+  #additionnal_configs:
+  #  hosts.conf: |
 
 features:
   # The features are configured as described in the official documentation 

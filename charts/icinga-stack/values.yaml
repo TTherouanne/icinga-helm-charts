@@ -37,6 +37,11 @@ icinga2:
       secretKey:
     disable_confd: true
 
+  # additional_configs:
+  #   hosts.conf: |
+  #   services.conf: |
+  #   tmeplates.conf: |
+
   features:
     # The features are configured as described in the official documentation 
     # at https://icinga.com/docs/icinga-2/latest/doc/09-object-types/#features
@@ -545,6 +550,7 @@ global:
         value: # Add a password here
         secretKey: # Or specify secret key
       enabled: true
+      type: mysql
       # host: mariadb.example.com
       # port: 3306
       persistence:
@@ -567,6 +573,7 @@ global:
         value: # Add a password here
         secretKey: # Or specify secret key
       enabled: true
+      type: mysql
       # host: mariadb.example.com
       # port: 3306
       persistence:
@@ -589,6 +596,7 @@ global:
         value: # Add a password here
         secretKey: # Or specify secret key
       enabled: false
+      type: mysql
       # host: mariadb.example.com
       # port: 3306
       persistence:
@@ -603,5 +611,6 @@ global:
 
   redis:
     enabled: true
+    # password: 
     # host: redis.example.com
     # port: 6379

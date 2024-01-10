@@ -6,6 +6,7 @@ metadata:
   labels:
     {{- include "icinga2.labels" . | nindent 4 }}
 data:
+  {{- if .Values.features.api.enabled }}
   icinga2.conf: |-
     {{- include "icinga2.config" . | nindent 4 }}
   {{- if .Values.features.api.enabled }}
@@ -20,6 +21,21 @@ data:
     {{- end }}
     {{- end }}
   {{- end }}
+
+
+{{- if .Values.additionnal_configs }}
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ include "icinga2.fullname" . }}-additionnal-configs
+  labels:
+    {{- include "icinga2.labels" . | nindent 4 }}
+data:
+  {{  toYaml .Values.additionnal_configs | nindent 2 }}
+{{- end }}
+
+
 ---
 kind: ConfigMap
 apiVersion: v1
@@ -28,7 +44,6 @@ metadata:
   labels:
     {{- include "icinga2.labels" . | nindent 4 }}
 data:
-  {{- if .Values.features.api.enabled }}
   api.conf: |
     object ApiListener "api" {
       accept_commands = {{ .Values.features.api.accept_commands | default "false" }}

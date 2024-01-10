@@ -9,7 +9,7 @@
 - name: icingaweb.resources.{{ $settings.database }}.type
   value: db
 - name: icingaweb.resources.{{ $settings.database }}.db
-  value: mysql
+  value: {{ $settings.type }}
 - name: icingaweb.resources.{{ $settings.database }}.host
   value: {{ if $settings.enabled }} {{ $.Release.Name }}-{{ $resource }}-database {{ else }} {{ $settings.host }} {{ end }}
 - name: icingaweb.resources.{{ $settings.database }}.dbname

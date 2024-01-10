@@ -35,6 +35,12 @@ spec:
               value: {{ if .Values.global.redis.enabled }} {{ .Release.Name }}-redis {{ else }} {{ .Values.global.redis.host | quote }} {{ end }}
             - name: ICINGADB_REDIS_PORT
               value: {{ if .Values.global.redis.enabled }} "6379" {{ else }} {{ .Values.global.redis.port | quote }} {{ end }}
+            {{- if .Values.global.redis.password }}
+            - name: ICINGADB_REDIS_PASSWORD
+              value: {{ .Values.global.redis.password }}
+            {{- end }}
+            - name: ICINGADB_DATABASE_TYPE
+              value: {{ .Values.global.databases.icingadb.type }}
             - name: ICINGADB_DATABASE_HOST
               value: {{ if .Values.global.databases.icingadb.enabled }} {{ .Release.Name }}-icingadb-database {{ else }} {{ .Values.global.databases.icingadb.host | quote }} {{ end }}
             - name: ICINGADB_DATABASE_PORT

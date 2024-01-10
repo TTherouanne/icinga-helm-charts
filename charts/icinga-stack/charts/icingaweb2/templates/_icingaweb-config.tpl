@@ -57,6 +57,10 @@
   value: {{ .Values.global.redis.host | default (print .Release.Name "-redis" ) | quote }}
 - name: icingaweb.modules.icingadb.redis.redis1.port
   value: {{ .Values.global.redis.port | default "6379" | quote }}
+{{- if .Values.global.redis.password }}
+- name: icingaweb.modules.icingadb.redis.redis1.password
+  value: {{ .Values.global.redis.password }}
+{{- end }}
 - name: icingaweb.modules.icingadb.commandtransports.icinga2.transport
   value: api
 - name: icingaweb.modules.icingadb.commandtransports.icinga2.skip_validation

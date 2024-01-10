@@ -15,6 +15,9 @@ include <manubulon>
 include <windows-plugins>
 include <nscp>
 include "features-enabled/*.conf"
+{{- if .Values.additionnal_configs }}
+include "conf.d/*"
+{{- end }}
 {{- if .Values.features.api.enabled }}
 include "api-users.conf"
 {{- end}}

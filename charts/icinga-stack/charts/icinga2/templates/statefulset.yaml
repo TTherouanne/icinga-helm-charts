@@ -51,6 +51,10 @@ spec:
               mountPath: /etc/icinga2/features-enabled
             - name: {{ include "icinga2.fullname" . }}-config
               mountPath: /etc/icinga2
+            {{- if .Values.additionnal_configs }}
+            - name: additional-configs
+              mountPath: /etc/icinga2/conf.d
+            {{- end }}
             {{- include "icinga2.secretMounts" . | indent 12 }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
@@ -86,6 +90,11 @@ spec:
         - name: {{ include "icinga2.fullname" . }}-config
           configMap:
             name: {{ include "icinga2.fullname" . }}-config
+        {{- if .Values.additionnal_configs }}
+        - name: additional-configs
+          configMap:
+            name: {{ include "icinga2.fullname" . }}-additionnal-configs
+        {{- end }}
         {{- if ne .Values.persistence.enabled true }}
         - name: data
           emptyDir: {}
