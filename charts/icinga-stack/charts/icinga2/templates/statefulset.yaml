@@ -12,8 +12,10 @@ spec:
       {{- include "icinga2.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
       annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmaps.yaml") . | sha256sum }}
+        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+      {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
@@ -51,6 +53,14 @@ spec:
               mountPath: /etc/icinga2/features-enabled
             - name: {{ include "icinga2.fullname" . }}-config
               mountPath: /etc/icinga2
+            {{- if .Values.smtp.enabled }}
+            - name: smtp-config
+              mountPath: /etc/mail.rc
+              subPath: mailrc
+            - name: smtp-config
+              mountPath: /var/lib/icinga2/.msmtprc
+              subPath: msmtprc
+            {{- end }}
             {{- if .Values.additionnal_configs }}
             - name: additional-configs
               mountPath: /etc/icinga2/conf.d
@@ -94,6 +104,11 @@ spec:
         - name: additional-configs
           configMap:
             name: {{ include "icinga2.fullname" . }}-additionnal-configs
+        {{- end }}
+        {{- if .Values.smtp.enabled }}
+        - name: smtp-config
+          configMap:
+            name: {{ include "icinga2.fullname" . }}-smtp-config
         {{- end }}
         {{- if ne .Values.persistence.enabled true }}
         - name: data

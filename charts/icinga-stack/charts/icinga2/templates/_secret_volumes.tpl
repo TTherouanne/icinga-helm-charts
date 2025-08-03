@@ -1,4 +1,9 @@
 {{- define "icinga2.secretVolumes" -}}
+{{- if .Values.ssh.enabled }}
+- name: ssh-private-keys
+  secret:
+    secretName: "ssh-private-key"
+{{- end }}
 {{- if and .Values.features.elasticsearch.enabled .Values.features.elasticsearch.enable_tls }}
 {{- if .Values.features.elasticsearch.tlsSecret }}
 - name: elastic-certs

@@ -1,4 +1,9 @@
 {{- define "icinga2.secretMounts" -}}
+{{- if .Values.ssh.enabled }}
+- name: ssh-private-keys
+  mountPath: /var/lib/icinga2/.ssh/id_rsa
+  subPath: ssh-private-key 
+{{- end }}
 {{- if and .Values.features.elasticsearch.enabled .Values.features.elasticsearch.enable_tls }}
 {{- if and .Values.features.elasticsearch.tlsSecret .Values.features.elasticsearch.caSecretKey .Values.features.elasticsearch.certSecretKey .Values.features.elasticsearch.keySecretKey }}
 - name: elastic-certs

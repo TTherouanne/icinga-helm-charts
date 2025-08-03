@@ -23,6 +23,22 @@ data:
   {{- end }}
 
 
+{{- if .Values.smtp.enabled }}
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ include "icinga2.fullname" . }}-smtp-config
+  labels:
+    {{- include "icinga2.labels" . | nindent 4 }}
+data:
+  msmtprc: |
+    host {{ .Values.smtp.server }}
+  mailrc: |
+    set mta=/usr/bin/msmtp
+{{- end }}
+
+
 {{- if .Values.additionnal_configs }}
 ---
 kind: ConfigMap
