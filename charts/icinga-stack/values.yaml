@@ -1,7 +1,7 @@
 icinga2:
   image:
     repository: icinga/icinga2
-    tag: 2.13.7
+    tag: 2.13.10
     pullPolicy: IfNotPresent
 
   imagePullSecrets: []
@@ -43,9 +43,9 @@ icinga2:
   #   tmeplates.conf: |
 
   features:
-    # The features are configured as described in the official documentation 
+    # The features are configured as described in the official documentation
     # at https://icinga.com/docs/icinga-2/latest/doc/09-object-types/#features
-    # Only some features are enabled by default; Some features are missing, for more information 
+    # Only some features are enabled by default; Some features are missing, for more information
     # see this project's README.md
     # `Optional` settings for each features are commented out, all other settings are required when enabling
     # a feature.
@@ -64,7 +64,7 @@ icinga2:
       # acl_allow_origin:
       #   - example.com
       #   - agent1.example.com
-      # environment: "" 
+      # environment: ""
 
     # For configuration information see https://icinga.com/docs/icinga-2/latest/doc/09-object-types/#checkercomponent
     checker:
@@ -130,7 +130,7 @@ icinga2:
       enabled: true
       # credSecret: # used for credentials
       # tlsSecret: # used for certificates
-      # password: 
+      # password:
       #   value: password # Specify password
       #   secretKey: password # Or use existing secret
       # enable_tls: false
@@ -363,13 +363,15 @@ icingadb:
     # runAsNonRoot: true
     # runAsUser: 1000
 
+  extraEnvVars: []
+
 icingaweb2:
   enabled: true
 
   image:
     repository: icinga/icingaweb2
-    tag: 2.11.4
-    pullPolicy: IfNotPresent
+    tag: 2.12.1
+    pullPolicy: Always
 
   imagePullSecrets: []
   nameOverride: ""
@@ -398,7 +400,7 @@ icingaweb2:
   auth:
     type: db
     #resource: # Add the name of the db resource used by Icinga Web 2 here
-    admin_user: icingaweb
+    admin_user: icingaadmin
     admin_password:
       value: # Add a password here
       credSecret:
@@ -457,6 +459,9 @@ icingaweb2:
       jobs: {}  # TODO: Add this
       sni: {}  # TODO: Add this
 
+    kubernetes:
+      enabled: true
+
   resources: {}
     # We usually recommend not to specify default resources and to leave this as a conscious
     # choice for the user. This also increases chances charts run on environments with little
@@ -497,9 +502,25 @@ icingaweb2:
     # runAsNonRoot: true
     # runAsUser: 1000
 
+  extraEnvVars: []
+
+icinga-kubernetes:
+  enabled: true
+
+  image:
+    repository: icinga/icinga-kubernetes
+    tag: 0.3.0
+    pullPolicy: IfNotPresent
+
+  rbac:
+    create: true
+
+  serviceAccount:
+    create: true
+
 global:
   api:
-    # host:  # only needed if Icinga2 runs out of cluster
+    # host:  # only needed if Icinga 2 runs out of cluster
     port: 5665
     users:
       credSecret: # Existing secret for director and icingaweb password
@@ -566,7 +587,7 @@ global:
     icingaweb2:
       database: icingaweb2db
       credSecret: # Existing secret name for username and password
-      username: 
+      username:
         value: # Set username
         secretKey: # Or specify secret key
       password:
@@ -589,7 +610,7 @@ global:
     x509:
       database: x509db
       credSecret: # Existing secret name for username and password
-      username: 
+      username:
         value: # Set username
         secretKey: # Or specify secret key
       password:
@@ -597,6 +618,29 @@ global:
         secretKey: # Or specify secret key
       enabled: false
       type: mysql
+      # host: mariadb.example.com
+      # port: 3306
+      persistence:
+        enabled: false
+        size: 5Gi
+        accessMode: ReadWriteOnce
+        # storageClass: ""
+        # volumeName: ""
+        # subPath: ""
+        matchLabels: {}
+        matchExpressions: []
+
+    kubernetes:
+      # Note that using secrets is not yet supported for Icinga Kubernetes.
+      database: kubernetes
+      credSecret: # Existing secret name for username and password
+      username:
+        value: # Set username
+        secretKey: # Or specify secret key
+      password:
+        value: # Add a password here
+        secretKey: # Or specify secret key
+      enabled: true
       # host: mariadb.example.com
       # port: 3306
       persistence:

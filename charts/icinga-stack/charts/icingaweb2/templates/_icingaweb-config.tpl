@@ -36,7 +36,7 @@
       name: {{ .Values.auth.admin_password.credSecret | quote }}
       key: {{ .Values.auth.admin_password.secretKey | quote }}
 {{- else }}
-{{ fail "IcingaWeb2 auth admin password not set. Set either .Values.icingaweb2.auth.admin_password.value or .Values.icingaweb2.auth.admin_password.credSecret and .Values.icingaweb2.auth.admin_password.secretKey" }}
+{{ fail "Icinga Web auth admin password not set. Set either .Values.icingaweb2.auth.admin_password.value or .Values.icingaweb2.auth.admin_password.credSecret and .Values.icingaweb2.auth.admin_password.secretKey" }}
 {{- end}}
 - name: icingaweb.config.global.config_resource
   value: {{ .Values.auth.resource | default .Values.global.databases.icingaweb2.database | quote }}
@@ -138,5 +138,9 @@
 {{- if .Values.modules.x509.enabled }}
 - name: icingaweb.modules.x509.config.backend.resource
   value: {{ .Values.global.databases.x509.database | quote }}
+{{- end }}
+{{- if .Values.modules.kubernetes.enabled }}
+- name: icingaweb.modules.kubernetes.config.database.resource
+  value: {{ .Values.global.databases.kubernetes.database | quote }}
 {{- end }}
 {{- end -}}
